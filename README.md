@@ -4,14 +4,16 @@ An MCP (Model Context Protocol) server that gives AI assistants access to Phish 
 
 ## Tools
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| `search_songs` | Find songs by name | "Search for Ghost" |
-| `best_versions` | Top-rated versions of any song | "What are the best Tweezers?" |
-| `get_show` | Show details with full setlist and scores | "What happened at the Phish show on 12/31/99?" |
-| `top_shows` | Highest-rated shows, filterable by year or tour | "Best Phish shows from 1997" |
-| `song_stats` | Detailed song stats: plays, debut, gap, audio analysis | "Tell me about Reba" |
-| `find_jams` | Search jams by BPM, duration, groove, and jam chart tags | "Find long funky Phish jams" |
+| Tool | Description |
+|------|-------------|
+| `search_songs` | Find songs by name |
+| `best_versions` | Top-rated versions of any song, filterable by year/era, venue, state |
+| `get_show` | Show details with full setlist and scores |
+| `top_shows` | Highest-rated shows, filterable by year/era, tour, venue, state |
+| `song_stats` | Detailed song stats: plays, debut, gap, audio analysis |
+| `find_jams` | Search jams by song, tags, year/era, venue, state, BPM, duration, groove, with sort options |
+| `bustouts` | Find songs with long gaps between performances |
+| `shows_by_venue` | Find shows at a specific venue, city, or state |
 
 ## Setup
 
@@ -55,12 +57,40 @@ npx @fouldomain/mcp-server
 
 Once connected, you can ask your AI assistant things like:
 
+### By song
 - "What's the best version of Tweezer?"
-- "Find me a long, dark Phish jam with high groove"
-- "What are the top 5 shows from Fall 1997?"
+- "Best Reba from 1997"
+- "Top Ghost versions at MSG"
+- "Best 3.0 Tweezers"
+
+### By style
+- "Find me a long, dark Phish jam"
+- "Dark funky jams from 1997-1999"
+- "Best Type II jams over 20 minutes"
+- "Grooviest jams from Fall 1997"
+- "Longest jams in 2.0"
+
+### By year and era
+- "Best Phish shows from 1997"
+- "Top shows in 3.0"
+- "Best jams from 2003-2004"
+
+### By venue and location
+- "Best shows at MSG"
+- "When did they last play Red Rocks?"
+- "Top shows in Colorado"
+- "What shows were at the Gorge in 2023?"
+- "Best jams at Hampton Coliseum"
+
+### Bustouts and gaps
+- "What songs haven't they played in 50+ shows?"
+- "What bustouts happened in 2024?"
+- "Songs they haven't played since 1.0"
+
+### Show details
+- "What happened at the Phish show on 12/31/99?"
+- "Show me the setlist from Baker's Dozen night 1"
 - "How many times has Phish played Reba?"
-- "Show me the setlist from 12/31/99"
-- "Find Type II jams over 20 minutes"
 
 Every response includes links back to [fouldomain.com](https://fouldomain.com) for full audio analysis, waveforms, and playback.
 
