@@ -1,0 +1,36 @@
+{
+  "name": "@fouldomain/mcp-server",
+  "version": "1.1.1",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "fouldomain-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "phish",
+    "music",
+    "analytics",
+    "concert",
+    "jam",
+    "live-music"
+  ],
+  "author": "Kevin Spence",
+  "license": "MIT",
+  "description": "MCP server for Foul Domain Phish concert analytics. Query 36,000+ analyzed tracks, show scores, and jam data.",
+  "homepage": "https://fouldomain.com",
+  "files": [
+    "index.js",
+    "README.md",
+    "package.json"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.3.6"
+  }
+}
