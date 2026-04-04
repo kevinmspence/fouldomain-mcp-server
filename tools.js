@@ -37,12 +37,19 @@ const yearFields = {
   era: z.string().optional().describe("Phish era: '1.0' (1983-2000), '2.0' (2003-2004), '3.0' (2009-2019), '4.0' (2021+)"),
 };
 
+const READ_ONLY = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  openWorldHint: false,
+};
+
 export function registerTools(server) {
   // ── Tool: Search for songs ──────────────────────────────────
   server.tool(
     "search_songs",
     "Search for Phish songs by name. Returns song info, play counts, and audio stats.",
     { query: z.string().describe("Song name to search for (partial match)") },
+    READ_ONLY,
     async ({ query }) => {
       const data = await api(`/api/public/song?q=${encodeURIComponent(query)}`);
       if (!data.songs?.length) return { content: [{ type: "text", text: "No songs found matching: " + query }] };
@@ -67,6 +74,7 @@ export function registerTools(server) {
       state: z.string().optional().describe("Filter by state (e.g. 'NY', 'Colorado')"),
       limit: z.coerce.number().optional().default(10).describe("Number of results (default 10, max 25)"),
     },
+    READ_ONLY,
     async ({ song, year, start_year, end_year, era, venue, state, limit }) => {
       const params = new URLSearchParams();
       params.set("song", song);
@@ -91,6 +99,7 @@ export function registerTools(server) {
     "get_show",
     "Get details about a specific Phish show by date (YYYY-MM-DD format).",
     { date: z.string().describe("Show date in YYYY-MM-DD format") },
+    READ_ONLY,
     async ({ date }) => {
       const data = await api(`/api/public/show?date=${encodeURIComponent(date)}`);
       if (data.error) return { content: [{ type: "text", text: "No show found on: " + date }] };
@@ -126,6 +135,7 @@ export function registerTools(server) {
       state: z.string().optional().describe("Filter by state (e.g. 'NY', 'Vermont')"),
       limit: z.coerce.number().optional().default(10).describe("Number of results (default 10, max 25)"),
     },
+    READ_ONLY,
     async ({ year, start_year, end_year, era, tour, venue, state, limit }) => {
       const params = new URLSearchParams();
       params.set("limit", String(Math.min(limit || 10, 25)));
@@ -148,6 +158,7 @@ export function registerTools(server) {
     "song_stats",
     "Get detailed statistics about a Phish song: total plays, debut, gap, average duration, and audio analysis.",
     { song: z.string().describe("Song title (exact or partial match)") },
+    READ_ONLY,
     async ({ song }) => {
       const data = await api(`/api/public/song?q=${encodeURIComponent(song)}`);
       if (!data.songs?.length) return { content: [{ type: "text", text: "Song not found: " + song }] };
@@ -178,6 +189,7 @@ export function registerTools(server) {
       sort: z.string().optional().describe("Sort by: 'score' (default), 'duration', 'groove', 'bpm'"),
       limit: z.coerce.number().optional().default(10).describe("Number of results (default 10, max 25)"),
     },
+    READ_ONLY,
     async ({ song, tags, year, start_year, end_year, era, venue, state, min_bpm, max_bpm, min_duration_minutes, min_groove, sort, limit }) => {
       const params = new URLSearchParams();
       if (min_bpm) params.set("minBpm", String(min_bpm));
@@ -212,6 +224,7 @@ export function registerTools(server) {
       year: z.coerce.number().optional().describe("Find bustouts that occurred in this year"),
       limit: z.coerce.number().optional().default(25).describe("Number of results (default 25, max 50)"),
     },
+    READ_ONLY,
     async ({ min_gap, year, limit }) => {
       const params = new URLSearchParams();
       params.set("minGap", String(min_gap || 20));
@@ -240,6 +253,7 @@ export function registerTools(server) {
       year: z.coerce.number().optional().describe("Filter to a specific year"),
       limit: z.coerce.number().optional().default(25).describe("Number of results (default 25, max 50)"),
     },
+    READ_ONLY,
     async ({ venue, city, state, year, limit }) => {
       if (!venue && !city && !state) return { content: [{ type: "text", text: "Please provide at least a venue, city, or state." }] };
       const params = new URLSearchParams();
