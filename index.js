@@ -35,9 +35,9 @@ function addYearParams(params, { year, startYear, endYear }) {
 }
 
 const yearFields = {
-  year: z.number().optional().describe("Filter to a single year (e.g. 2004)"),
-  start_year: z.number().optional().describe("Start of year range (e.g. 1997)"),
-  end_year: z.number().optional().describe("End of year range (e.g. 1999)"),
+  year: z.coerce.number().optional().describe("Filter to a single year (e.g. 2004)"),
+  start_year: z.coerce.number().optional().describe("Start of year range (e.g. 1997)"),
+  end_year: z.coerce.number().optional().describe("End of year range (e.g. 1999)"),
   era: z.string().optional().describe("Phish era: '1.0' (1983-2000), '2.0' (2003-2004), '3.0' (2009-2019), '4.0' (2021+)"),
 };
 
@@ -73,7 +73,7 @@ server.tool(
     ...yearFields,
     venue: z.string().optional().describe("Filter by venue name (partial match, e.g. 'MSG', 'Garden')"),
     state: z.string().optional().describe("Filter by state (e.g. 'NY', 'Colorado')"),
-    limit: z.number().optional().default(10).describe("Number of results (default 10, max 25)"),
+    limit: z.coerce.number().optional().default(10).describe("Number of results (default 10, max 25)"),
   },
   async ({ song, year, start_year, end_year, era, venue, state, limit }) => {
     const params = new URLSearchParams();
@@ -132,7 +132,7 @@ server.tool(
     tour: z.string().optional().describe("Filter by tour name (partial match)"),
     venue: z.string().optional().describe("Filter by venue name (partial match)"),
     state: z.string().optional().describe("Filter by state (e.g. 'NY', 'Vermont')"),
-    limit: z.number().optional().default(10).describe("Number of results (default 10, max 25)"),
+    limit: z.coerce.number().optional().default(10).describe("Number of results (default 10, max 25)"),
   },
   async ({ year, start_year, end_year, era, tour, venue, state, limit }) => {
     const params = new URLSearchParams();
@@ -179,12 +179,12 @@ server.tool(
     ...yearFields,
     venue: z.string().optional().describe("Filter by venue name (partial match)"),
     state: z.string().optional().describe("Filter by state (e.g. 'CO', 'New York')"),
-    min_bpm: z.number().optional().describe("Minimum BPM"),
-    max_bpm: z.number().optional().describe("Maximum BPM"),
-    min_duration_minutes: z.number().optional().describe("Minimum duration in minutes"),
-    min_groove: z.number().optional().describe("Minimum groove score (0-100)"),
+    min_bpm: z.coerce.number().optional().describe("Minimum BPM"),
+    max_bpm: z.coerce.number().optional().describe("Maximum BPM"),
+    min_duration_minutes: z.coerce.number().optional().describe("Minimum duration in minutes"),
+    min_groove: z.coerce.number().optional().describe("Minimum groove score (0-100)"),
     sort: z.string().optional().describe("Sort by: 'score' (default), 'duration', 'groove', 'bpm'"),
-    limit: z.number().optional().default(10).describe("Number of results (default 10, max 25)"),
+    limit: z.coerce.number().optional().default(10).describe("Number of results (default 10, max 25)"),
   },
   async ({ song, tags, year, start_year, end_year, era, venue, state, min_bpm, max_bpm, min_duration_minutes, min_groove, sort, limit }) => {
     const params = new URLSearchParams();
@@ -216,9 +216,9 @@ server.tool(
   "bustouts",
   "Find songs with long gaps between performances (bustouts). Without a year, shows current bustout candidates. With a year, shows bustouts that happened that year.",
   {
-    min_gap: z.number().optional().default(20).describe("Minimum show gap to qualify as a bustout (default 20)"),
-    year: z.number().optional().describe("Find bustouts that occurred in this year"),
-    limit: z.number().optional().default(25).describe("Number of results (default 25, max 50)"),
+    min_gap: z.coerce.number().optional().default(20).describe("Minimum show gap to qualify as a bustout (default 20)"),
+    year: z.coerce.number().optional().describe("Find bustouts that occurred in this year"),
+    limit: z.coerce.number().optional().default(25).describe("Number of results (default 25, max 50)"),
   },
   async ({ min_gap, year, limit }) => {
     const params = new URLSearchParams();
@@ -245,8 +245,8 @@ server.tool(
     venue: z.string().optional().describe("Venue name (partial match, e.g. 'Madison Square', 'Red Rocks')"),
     city: z.string().optional().describe("City name (partial match)"),
     state: z.string().optional().describe("State (e.g. 'CO', 'New York')"),
-    year: z.number().optional().describe("Filter to a specific year"),
-    limit: z.number().optional().default(25).describe("Number of results (default 25, max 50)"),
+    year: z.coerce.number().optional().describe("Filter to a specific year"),
+    limit: z.coerce.number().optional().default(25).describe("Number of results (default 25, max 50)"),
   },
   async ({ venue, city, state, year, limit }) => {
     if (!venue && !city && !state) return { content: [{ type: "text", text: "Please provide at least a venue, city, or state." }] };
