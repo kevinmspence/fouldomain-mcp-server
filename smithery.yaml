@@ -1,0 +1,9 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+    required: []
+  commandFunction:
+    - node
+    - index.js
