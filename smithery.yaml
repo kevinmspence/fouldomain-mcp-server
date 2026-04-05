@@ -1,9 +1,16 @@
+name: Foul Domain
+displayName: Foul Domain - Phish Concert Analytics
+description: Search 36,000+ analyzed Phish tracks. Find the best jams, shows, and song versions by year, era, venue, tags, and more.
+homepage: https://fouldomain.com
+icon: https://fouldomain.com/logo.png
 startCommand:
-  type: stdio
+  type: http
+  url: https://fouldomain.com/api/mcp
   configSchema:
     type: object
-    properties: {}
+    properties:
+      baseUrl:
+        type: string
+        default: "https://fouldomain.com"
+        description: "API base URL for Foul Domain"
     required: []
-  commandFunction:
-    - node
-    - index.js

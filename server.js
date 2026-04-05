@@ -3,23 +3,23 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import express from "express";
-import { registerTools } from "./tools.js";
+import { registerAll } from "./tools.js";
 
 const app = express();
 app.use(express.json());
 
 // Health check
 app.get("/", (_req, res) => {
-  res.json({ name: "fouldomain-mcp", version: "2.0.1", status: "ok" });
+  res.json({ name: "fouldomain-mcp", version: "2.1.0", status: "ok" });
 });
 
 // MCP endpoint — stateless: each request gets a fresh server+transport
 app.post("/mcp", async (req, res) => {
   const server = new McpServer({
     name: "fouldomain",
-    version: "2.0.1",
+    version: "2.1.0",
   });
-  registerTools(server);
+  registerAll(server);
 
   try {
     const transport = new StreamableHTTPServerTransport({

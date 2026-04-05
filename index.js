@@ -2,14 +2,14 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { registerTools } from "./tools.js";
+import { registerAll } from "./tools.js";
 
 const server = new McpServer({
   name: "fouldomain",
-  version: "2.0.1",
+  version: "2.1.0",
 });
 
-registerTools(server);
+registerAll(server);
 
 const transport = new StdioServerTransport();
 await server.connect(transport);

@@ -43,6 +43,144 @@ const READ_ONLY = {
   openWorldHint: false,
 };
 
+export function registerAll(server) {
+  registerTools(server);
+  registerPrompts(server);
+  registerResources(server);
+}
+
+function registerPrompts(server) {
+  server.prompt(
+    "explore_song",
+    "Deep-dive analysis of a Phish song — best versions, stats, and standout jams across eras",
+    { song: z.string().describe("Song name to explore") },
+    async ({ song }) => ({
+      messages: [{
+        role: "user",
+        content: {
+          type: "text",
+          text: `Give me a deep dive on ${song}. Use song_stats to get overview data, then best_versions to find the top performances. Highlight what makes the best versions special and note any era trends.`,
+        },
+      }],
+    })
+  );
+
+  server.prompt(
+    "discover_jams",
+    "Find jams matching a mood or style — dark, funky, blissful, ambient, etc.",
+    {
+      style: z.string().describe("Jam style or mood (e.g. 'dark and funky', 'blissful ambient', 'high energy')"),
+      era: z.string().optional().describe("Optional era: '1.0', '2.0', '3.0', '4.0'"),
+    },
+    async ({ style, era }) => {
+      const eraText = era ? ` from the ${era} era` : "";
+      return {
+        messages: [{
+          role: "user",
+          content: {
+            type: "text",
+            text: `Find me some ${style} Phish jams${eraText}. Use find_jams with appropriate tag filters. Recommend specific versions and explain what makes each one worth listening to.`,
+          },
+        }],
+      };
+    }
+  );
+
+  server.prompt(
+    "show_recap",
+    "Get a full recap and analysis of a specific Phish show",
+    { date: z.string().describe("Show date in YYYY-MM-DD format") },
+    async ({ date }) => ({
+      messages: [{
+        role: "user",
+        content: {
+          type: "text",
+          text: `Give me a full recap of the Phish show on ${date}. Use get_show to get the setlist and scores, then highlight the standout performances and overall show quality.`,
+        },
+      }],
+    })
+  );
+}
+
+function registerResources(server) {
+  server.resource(
+    "scoring_guide",
+    "fouldomain://guides/scoring",
+    { description: "How Foul Domain scores tracks and shows", mimeType: "text/plain" },
+    async () => ({
+      contents: [{
+        uri: "fouldomain://guides/scoring",
+        text: `Foul Domain Scoring Guide
+
+Track Performance Scores (0-100):
+Scores are computed from 9 weighted signals:
+- Fan popularity (20%): Phish.in likes, normalized by era
+- Jam chart bonus (15%): On the Phish.net jam chart
+- Community recognition (15%): Jam chart tags and description quality
+- Review signal (10%): Fan review sentiment (standout vs weak)
+- Energy build (10%): Dynamic range from quiet to loud moments
+- Groove consistency (10%): Steady energy = locked-in pocket
+- Duration (10%): Longer than average hints at exploration
+- Harmonic exploration (5%): Chroma variance = harmonic movement
+- Volatility (5%): Direction changes in energy = chaotic exploration
+
+Score interpretation:
+- 0-15: Standard composed performance, minimal improvisation
+- 15-30: Some improvisation or notable qualities
+- 30-50: Strong performance with real exploration
+- 50-70: Elite jam, top tier for this song
+- 70+: All-time great, legendary performance
+
+Show Scores (0-100):
+Aggregated from the best track scores in the show, weighted by community ratings.
+
+Groove Scores (0-100):
+Measures rhythmic pocket and danceability. High groove = funky, locked-in jam.
+
+Available Jam Tags:
+Type I, Type II, Funk, Bliss, Dark, Ambient, Rock, Peak, Build, Experimental
+
+Phish Eras:
+- 1.0 (1983-2000): The original run
+- 2.0 (2003-2004): Brief reunion, farewell at Coventry
+- 3.0 (2009-2019): The comeback
+- 4.0 (2021-present): Post-pandemic era`,
+      }],
+    })
+  );
+
+  server.resource(
+    "about",
+    "fouldomain://about",
+    { description: "About Foul Domain and its data sources", mimeType: "text/plain" },
+    async () => ({
+      contents: [{
+        uri: "fouldomain://about",
+        text: `About Foul Domain
+
+Foul Domain (fouldomain.com) is a Phish concert analytics platform with audio analysis of 36,000+ live tracks spanning 40+ years.
+
+Data sources:
+- Audio from Phish.in (36,861 tracks)
+- Setlists and show data from Phish.net
+- Community ratings from Phish.net (343,000+ votes)
+- Jam charts from Phish.net (community-curated notable performances)
+- Fan likes from Phish.in
+
+Audio analysis extracts:
+- BPM and tempo stability
+- Energy curves and dynamic range
+- Spectral characteristics
+- Groove and rhythmic consistency
+- Peak moments and builds
+- Jam start detection
+
+All scores, rankings, and analytics are derived from this data. No subjective human ratings are used in the scoring algorithm.`,
+      }],
+    })
+  );
+}
+
 export function registerTools(server) {
   // ── Tool: Search for songs ──────────────────────────────────
   server.tool(
